@@ -1,0 +1,5 @@
+[main]
+# Keep the existing shared modifier behavior on every managed keyboard.
+capslock = layer(alt)
+leftalt = overloadt(alt, muhenkan, 200)
+rightalt = overloadt(alt, henkan, 200)
