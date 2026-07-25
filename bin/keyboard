@@ -1,0 +1,56 @@
+#!/bin/bash
+# Toggle the internal laptop keyboard on/off via xinput floating.
+set -euo pipefail
+
+NAME="AT Translated Set 2 keyboard"
+
+get_id() {
+  xinput list --id-only "$NAME" 2>/dev/null
+}
+
+is_floating() {
+  xinput list "$NAME" 2>/dev/null | grep -q "floating slave"
+}
+
+usage() {
+  echo "Usage: keyboard [on|off|toggle|status]" >&2
+  exit 1
+}
+
+id="$(get_id || true)"
+if [ -z "$id" ]; then
+  echo "Internal keyboard device not found." >&2
+  exit 1
+fi
+
+cmd="${1:-status}"
+
+case "$cmd" in
+  off)
+    xinput float "$id"
+    echo "Internal keyboard: off"
+    ;;
+  on)
+    xinput reattach "$id" 3
+    echo "Internal keyboard: on"
+    ;;
+  toggle)
+    if is_floating; then
+      xinput reattach "$id" 3
+      echo "Internal keyboard: on"
+    else
+      xinput float "$id"
+      echo "Internal keyboard: off"
+    fi
+    ;;
+  status)
+    if is_floating; then
+      echo "Internal keyboard: off"
+    else
+      echo "Internal keyboard: on"
+    fi
+    ;;
+  *)
+    usage
+    ;;
+esac
