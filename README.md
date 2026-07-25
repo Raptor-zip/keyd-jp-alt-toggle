@@ -40,6 +40,25 @@ grep -A6 "keyboard" /proc/bus/input/devices
 
 and edit the `-0001:0001` line in `etc-keyd/default.conf` before installing.
 
+## `bin/keyboard` — toggle the internal keyboard on/off
+
+Companion CLI that floats/reattaches the internal keyboard via `xinput`, for
+when you want to use only an external keyboard and avoid accidental input
+from the built-in one:
+
+```bash
+cp bin/keyboard ~/bin/keyboard   # anywhere on your PATH
+keyboard off      # disable internal keyboard
+keyboard on       # re-enable it
+keyboard toggle
+keyboard status
+```
+
+This only lasts for the current X session (nothing persists across reboot or
+re-login) and requires `xinput`. It looks up the device by the name
+"AT Translated Set 2 keyboard" — adjust the `NAME` variable in the script if
+your internal keyboard reports a different name.
+
 ## Files
 
 - `etc-keyd/common` — the actual key mappings (Alt overload, CapsLock layer)
@@ -48,3 +67,4 @@ and edit the `-0001:0001` line in `etc-keyd/default.conf` before installing.
 - `etc-keyd/japanese-external.conf` — JP layout overrides for a specific
   external keyboard by id; edit or drop the `[ids]` section to match your
   own external keyboard(s)
+- `bin/keyboard` — CLI to toggle the internal keyboard on/off
